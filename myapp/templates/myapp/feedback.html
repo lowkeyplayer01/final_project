@@ -1,0 +1,17 @@
+{% extends "myapp/base.html" %}
+{% block content %}
+  <h1>Site Feedback</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div>
+      {{ form.suggestions.label_tag }}<br>
+      {{ form.suggestions }}
+      {% for err in form.suggestions.errors %}
+        <div style="color:red">{{ err }}</div>
+      {% endfor %}
+    </div>
+    <button type="submit">Send Feedback</button>
+  </form>
+{% endblock %}
+

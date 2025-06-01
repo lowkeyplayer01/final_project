@@ -1,0 +1,64 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+  <h1>Reviews for {{ dr.local_name|default:dr.dish.name }} @ {{ dr.restaurant.name }}</h1>
+  <p>Average rating: {{ avg_rating|default:"No ratings yet" }}</p>
+
+  {% if user.is_authenticated %}
+    <h2>Submit a Review</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <div>
+        {{ form.rating.label_tag }} {{ form.rating }}
+        {% for err in form.rating.errors %}
+          <div style="color:red">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <div>
+        {{ form.price_paid.label_tag }} {{ form.price_paid }}
+        {% for err in form.price_paid.errors %}
+          <div style="color:red">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <div>
+        {{ form.photo.label_tag }} {{ form.photo }}
+        {% for err in form.photo.errors %}
+          <div style="color:red">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <div>
+        {{ form.description.label_tag }}<br>
+        {{ form.description }}
+        {% for err in form.description.errors %}
+          <div style="color:red">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  {% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to leave a review.</p>
+  {% endif %}
+
+  <h2>Existing Reviews</h2>
+  <ul>
+    {% for r in reviews %}
+      <li>
+        <p><strong>{{ r.user.username }}</strong> — Rating {{ r.rating }} — nok{{ r.price_paid }}</p>
+        {% if r.photo %}
+          <p>Photo: <a href="{{ rev.photo.url }}">View</a></p>
+        {% endif %}
+        <p>{{ r.description }}</p>
+        {% if user.is_authenticated and r.user == user %}
+          <p>
+            <a href="{% url 'myapp:review_edit' rev.id %}">Edit</a> 
+            <a href="{% url 'myapp:review_delete' rev.id %}">Delete</a>
+          </p>
+        {% endif %}
+      </li>
+    {% empty %}
+      <li>No reviews yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

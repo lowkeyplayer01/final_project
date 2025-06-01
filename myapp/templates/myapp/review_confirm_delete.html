@@ -1,0 +1,32 @@
+{% extends "myapp/base.html" %}
+
+
+{% block content %}
+<div class="container">
+  <h2 class="mb-4 text-danger">Delete Review</h2>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">
+        {{ review.user.username }}’s review of 
+        {{ review.dish_restaurant.local_name|default:review.dish_restaurant.dish.name }}
+        @ {{ review.dish_restaurant.restaurant.name }}
+      </h5>
+      <p class="card-text">
+        Rating: {{ review.rating }}<br>
+        Price paid: ${{ review.price_paid }}<br>
+        {{ review.description }}
+      </p>
+
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, delete it</button>
+        <a href="{% url 'myapp:dish_reviews' 
+                     review.dish_restaurant.dish.id 
+                     review.dish_restaurant.restaurant.id %}"
+           class="btn btn-outline-secondary ms-2">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

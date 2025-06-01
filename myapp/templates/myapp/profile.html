@@ -1,0 +1,68 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+  <h1>My Profile</h1>
+
+  <h2>Account Information</h2>
+  <p><strong>Username:</strong> {{ request.user.username }}</p>
+  <p><strong>Email:</strong> {{ request.user.email }}</p>
+  <p><strong>First Name:</strong> {{ request.user.first_name }}</p>
+  <p><strong>Last Name:</strong> {{ request.user.last_name }}</p>
+  <p>
+    <a href="{% url 'myapp:change_password' %}">Change Password</a> |
+    <a href="{% url 'myapp:delete_profile' %}">Delete Account</a>
+  </p>
+
+  <hr>
+
+  <h2>My Wishlist</h2>
+  <p><a href="{% url 'myapp:home' %}">Search to Add</a></p>
+  {% if paired_wishlist %}
+    <ul>
+      {% for item, combo in paired_wishlist %}
+        <li>
+          {% if combo %}
+            {# Found a matching DishRestaurant combo, so link to its review page #}
+            <a href="{% url 'myapp:dish_reviews' combo.dish.id combo.restaurant.id %}">
+              {{ item.dish.name }}
+            </a>
+          {% else %}
+            {# No combo found—just show the dish name #}
+            {{ item.dish.name }}
+          {% endif %}
+          <br>
+          <small>Added on {{ item.created_date|date:"Y-m-d H:i" }}</small>
+          {% if item.comments %}
+            <br><em>Note: {{ item.comments }}</em>
+          {% endif %}
+          <br>
+          <a href="{% url 'myapp:wishlist_remove' item.id %}">Remove</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Your wishlist is empty.</p>
+  {% endif %}
+
+  <hr>
+
+  <h2>My Reviews</h2>
+  {% if my_reviews %}
+    <ul>
+      {% for rev in my_reviews %}
+        <li>
+          <strong>
+            {{ rev.dish_restaurant.restaurant.name }} –
+            {{ rev.dish_restaurant.dish.name }}
+          </strong><br>
+          Rated ★ {{ rev.rating|floatformat:1 }} on {{ rev.created_date|date:"Y-m-d H:i" }}<br>
+          <p>{{ rev.description }}</p>
+          <a href="{% url 'myapp:review_edit' rev.id %}">Edit</a> |
+          <a href="{% url 'myapp:review_delete' rev.id %}">Delete</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You haven’t written any reviews yet.</p>
+  {% endif %}
+{% endblock %}

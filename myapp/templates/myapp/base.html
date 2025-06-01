@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Foodish</title>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="{% url 'myapp:landing' %}">Home</a></li>
+      <li><a href="{% url 'myapp:profile' %}">Profile</a></li>
+      <li><a href="{% url 'myapp:feedback' %}">Feedback</a></li>
+      <li><a href="{% url 'myapp:restaurant_list' %}">Restaurants</a></li>
+      {% if user.is_authenticated %}
+        <li>
+          <form method="post" action="{% url 'logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Logout ({{ user.username }})</button>
+          </form>
+        </li>
+      {% else %}
+        <li><a href="{% url 'login' %}">Login</a></li>
+        <li><a href="{% url 'myapp:signup' %}">Sign Up</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <hr>
+
+  <div>
+    {% block content %}
+    {% endblock %}
+  </div>
+</body>
+</html>

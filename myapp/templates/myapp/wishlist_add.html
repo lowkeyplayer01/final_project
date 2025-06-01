@@ -1,0 +1,20 @@
+{% extends "myapp/base.html" %}
+{% block content %}
+  <h1>Add “{{ dish.name }}” to Your Wishlist</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div>
+      {{ form.comments.label_tag }}<br>
+      {{ form.comments }}
+      {% for err in form.comments.errors %}
+        <div style="color:red">{{ err }}</div>
+      {% endfor %}
+      <small>(Optional) Add some notes here :)</small>
+    </div>
+
+    <button type="submit">Add to Wishlist</button>
+    <a href="javascript:history.back()">Cancel</a>
+    
+  </form>
+{% endblock %}

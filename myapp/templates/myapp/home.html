@@ -1,0 +1,32 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+  <h1>Home</h1>
+
+  <form method="get" action="{% url 'myapp:search_results' %}">
+    <label for="dish-search">Search for a dish:</label>
+    <input
+      type="text"
+      id="dish-search"
+      name="q"
+      placeholder="Enter dish name…"
+      required
+    >
+    <button type="submit">Search</button>
+  </form>
+  <hr>
+
+  <h2>Trending Dishes (by review count)</h2>
+  <ul>
+    {% for dr in trending %}
+      <li>
+        {{ dr.dish.name }} @ {{ dr.restaurant.name }}
+        [Reviews: {{ dr.review_count }}]
+        <a href="{% url 'myapp:dish_reviews' dr.dish.id dr.restaurant.id %}">Reviews</a>
+      </li>
+    {% empty %}
+      <li>No trending dishes yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
+

@@ -1,0 +1,28 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+  <h1>{{ restaurant.name }}</h1>
+  <p>{{ restaurant.description }}</p>
+  <p>Address: {{ restaurant.address }}</p>
+  <p>Phone: {{ restaurant.contact_phone }}</p>
+  <p>Website: 
+    {% if restaurant.website %}
+      <a href="{{ restaurant.website }}">{{ restaurant.website }}</a>
+    {% else %}
+      N/A
+    {% endif %}
+  </p>
+
+  <h2>Menu</h2>
+  <ul>
+    {% for dr in dishes %}
+      <li>
+        {{ dr.dish.name }}  
+        ({{ dr.local_name|default:dr.dish.name }})  
+        — <a href="{% url 'myapp:dish_reviews' dr.dish.id dr.restaurant.id %}">Reviews</a>
+      </li>
+    {% empty %}
+      <li>No dishes available.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
